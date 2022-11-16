@@ -1,12 +1,13 @@
 import { Formik } from 'formik';
-import React, { useRef } from 'react';
+import React, { useContext, useState } from 'react';
 import * as yup from 'yup';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import AuthContext from '../contexts';
 import routes from '../routes';
-// import AuthContext from '../contexts/authContext';
 
 const schema = yup.object().shape({
   username: yup.string().required('Обязательное поле'),
@@ -14,8 +15,9 @@ const schema = yup.object().shape({
 });
 
 const Loginpage = () => {
-  const ref = useRef(null);
+  const [formState, setFormState] = useState('valid');
   const navigate = useNavigate();
+  const userAuth = useContext(AuthContext);
   const goHome = () => navigate('/');
 
   const authorization = ({ username, password }) => {
@@ -24,13 +26,16 @@ const Loginpage = () => {
       password,
     })
       .then((answer) => {
-        console.log(answer);
-        localStorage.token = answer.data.token;
-        ref.current.classList.add('invalid-feedback');
+        userAuth.logIn(answer.data.token);
         goHome();
       })
-      .catch(() => {
-        ref.current.classList.replace('invalid-feedback', 'feedback');
+      .catch((e) => {
+        if (e.response.status !== 401) {
+          console.log('ощибка сети');
+          setFormState('network_error');
+          return;
+        }
+        setFormState('invalid');
       });
   };
 
@@ -88,13 +93,14 @@ const Loginpage = () => {
               </Form.Text>
               )}
             </Form.Group>
-            <div className="invalid-feedback" ref={ref}>Неверное имя пользователя или пароль.</div>
+            { formState === 'invalid' && <div className="feedback">Неверное имя пользователя или пароль.</div>}
             <Button variant="primary" type="submit">
               Войти
             </Button>
           </Form>
         )}
       </Formik>
+      {formState === 'network_error' && <Alert key="danger" variant="danger" dismissible>Ой, что-то пошло не так.</Alert>}
     </div>
   );
 };
