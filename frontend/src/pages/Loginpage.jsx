@@ -31,7 +31,6 @@ const Loginpage = () => {
       })
       .catch((e) => {
         if (e.response.status !== 401) {
-          console.log('ощибка сети');
           setFormState('network_error');
           return;
         }
@@ -40,7 +39,7 @@ const Loginpage = () => {
   };
 
   return (
-    <div>
+    <div className="flex-container">
       <h1>Войти</h1>
       <Formik
         initialValues={{
