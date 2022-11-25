@@ -26,7 +26,7 @@ const Loginpage = () => {
       password,
     })
       .then((answer) => {
-        userAuth.logIn(answer.data.token);
+        userAuth.logIn(answer.data.token, username);
         goHome();
       })
       .catch((e) => {

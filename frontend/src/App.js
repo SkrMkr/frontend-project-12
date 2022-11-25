@@ -2,18 +2,23 @@ import React, { useState } from 'react';
 import {
   Route, Routes, Link, Navigate,
 } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { io } from 'socket.io-client';
 import Home from './pages/Homepage';
 import Notfound from './pages/Notfoundpage';
 import Loginpage from './pages/Loginpage';
 import AuthContext from './contexts';
 import './App.css';
+import ChatContext from './contexts/chat';
+import { actions as messagesAction } from './slices/messagesSlice';
 
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
 
-  const logIn = (token) => {
+  const logIn = (token, username) => {
     setLoggedIn(true);
     localStorage.token = token;
+    localStorage.username = username;
   };
   const logOut = () => {
     localStorage.removeItem('token');
@@ -22,7 +27,10 @@ const AuthProvider = ({ children }) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-constructed-context-values
-    <AuthContext.Provider value={{ loggedIn, logIn, logOut }}>
+    <AuthContext.Provider value={{
+      loggedIn, logIn, logOut,
+    }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -35,6 +43,32 @@ const PrivateAccess = ({ children }) => {
   return children;
 };
 
+const ChatProvider = ({ children }) => {
+  const [currentChannelId, setCurrentChannelId] = useState(1);
+  const dispatch = useDispatch();
+  const socket = io();
+  const isConnected = () => socket.on('connect', () => {
+    console.log('есть ли коннект', socket.connected);
+  });
+  const getNewMessage = () => socket.on('newMessage', (message) => {
+    console.log('сообщение при подписке сокета на новые сообщения', message);
+    dispatch(messagesAction.addMessage(message));
+  });
+  const sendNewMessage = (message) => socket.emit('newMessage', message, (response) => {
+    console.log('response status', response.status);
+  });
+
+  return (
+    // eslint-disable-next-line react/jsx-no-constructed-context-values
+    <ChatContext.Provider value={{
+      isConnected, getNewMessage, sendNewMessage, currentChannelId, setCurrentChannelId,
+    }}
+    >
+      {children}
+    </ChatContext.Provider>
+  );
+};
+
 const App = () => (
   <AuthProvider>
     <div>
@@ -43,7 +77,7 @@ const App = () => (
         <Link to="/login">Логин</Link>
       </header>
       <Routes>
-        <Route path="/" element={<PrivateAccess><Home /></PrivateAccess>} />
+        <Route path="/" element={<PrivateAccess><ChatProvider><Home /></ChatProvider></PrivateAccess>} />
         <Route path="/login" element={<Loginpage />} />
         <Route path="*" element={<Notfound />} />
       </Routes>

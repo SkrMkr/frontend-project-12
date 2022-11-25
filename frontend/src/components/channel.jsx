@@ -1,28 +1,22 @@
 import Container from 'react-bootstrap/Container';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
-import Navbar from 'react-bootstrap/Navbar';
+import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { selectors } from '../slices/channelsSlice';
-
-const showId = () => console.log('just test for click');
-
-const ChannelBtn = ({ channel }) => (
-  <>
-    <Navbar bg="light">
-      <Container>
-        <Navbar.Brand href={`#${channel.id}`} onClick={showId}>{channel.name}</Navbar.Brand>
-      </Container>
-    </Navbar>
-    <br />
-  </>
-);
+import ChatContext from '../contexts/chat';
 
 const ChannelsContainer = () => {
   const channels = useSelector(selectors.selectAll);
+  const chatContext = useContext(ChatContext);
+  const { currentChannelId, setCurrentChannelId } = chatContext;
 
+  const showId = (id) => {
+    setCurrentChannelId(id);
+    console.log('just test for click');
+  };
   return (
     <div className="h-100">
       <Container>
@@ -36,7 +30,17 @@ const ChannelsContainer = () => {
         </Row>
       </Container>
       <Container>
-        {channels.map((channel) => <ChannelBtn key={channel.id} channel={channel} />)}
+        <ListGroup>
+          {channels.map((channel) => (
+            <ListGroup.Item
+              key={channel.id}
+              active={channel.id === currentChannelId}
+              onClick={() => showId(channel.id)}
+            >
+              {channel.name}
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
       </Container>
     </div>
   );

@@ -1,16 +1,19 @@
 import axios from 'axios';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useDispatch } from 'react-redux';
 import ChannelsContainer from '../components/channel';
 import ChatContainer from '../components/chatContainer';
 import { actions as channelsAction } from '../slices/channelsSlice';
 import { actions as messagesAction } from '../slices/messagesSlice';
 import routes from '../routes';
+import ChatContext from '../contexts/chat';
 
 const Home = () => {
   const dispatch = useDispatch();
+  const chatContext = useContext(ChatContext);
+  const { getNewMessage } = chatContext;
 
   useEffect(() => {
     const getResponse = async () => {
@@ -20,17 +23,15 @@ const Home = () => {
           Authorization: tokenForRequest,
         },
       });
-      const { channels, currentChannelId, messages } = data;
-      console.log('данные', data);
-      console.log(data, channels, currentChannelId, messages);
-      console.log('Данные', data);
+      console.log(data);
+      const { channels, messages } = data;
 
       dispatch(channelsAction.addChannels(channels));
       dispatch(messagesAction.addMessages(messages));
     };
-    console.log('до запуска запроса');
+
     getResponse();
-    // сокеты тут
+    getNewMessage();
   });
 
   return (
@@ -46,4 +47,5 @@ const Home = () => {
     </div>
   );
 };
+
 export default Home;

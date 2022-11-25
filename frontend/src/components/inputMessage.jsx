@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import ChatContext from '../contexts/chat';
 
 const InputMessage = () => {
   const [text, setText] = useState('');
+  const chatContext = useContext(ChatContext);
+  const { sendNewMessage, currentChannelId } = chatContext;
 
   const sendMessage = () => {
-    console.log(text);
+    const message = {
+      body: text,
+      channelId: currentChannelId,
+      username: localStorage.username,
+    };
+    sendNewMessage(message);
     setText('');
-    // логика по добавлению сообщений в store
   };
 
   return (
