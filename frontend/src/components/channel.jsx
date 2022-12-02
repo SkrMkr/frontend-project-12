@@ -25,6 +25,8 @@ const ChannelItem = (props) => {
     setCurrentChannelId,
     showModal,
   } = props;
+
+  const permanentChannelsId = [1, 2];
   return (
     <ListGroup.Item
       active={channel.id === currentChannelId}
@@ -36,6 +38,8 @@ const ChannelItem = (props) => {
           {' '}
           {channel.name}
         </Col>
+        {!permanentChannelsId.includes(channel.id)
+        && (
         <Col>
           <span>
             <Dropdown>
@@ -52,6 +56,7 @@ const ChannelItem = (props) => {
             </Dropdown>
           </span>
         </Col>
+        )}
       </Row>
     </ListGroup.Item>
   );

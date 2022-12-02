@@ -27,6 +27,8 @@ const Rename = (props) => {
       renameChannel(channel.id, values.nameChannel);
       onHide();
     },
+    validateOnChange: false,
+    validateOnBlur: false,
   });
 
   useEffect(() => {

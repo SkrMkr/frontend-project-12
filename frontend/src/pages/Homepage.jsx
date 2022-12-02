@@ -13,7 +13,12 @@ import ChatContext from '../contexts/chat';
 const Home = () => {
   const dispatch = useDispatch();
   const chatContext = useContext(ChatContext);
-  const { getNewMessage } = chatContext;
+  const {
+    getNewChannel,
+    getNewMessage,
+    subscribeRemoveChannel,
+    subscribeRenameChannel,
+  } = chatContext;
 
   useEffect(() => {
     const getResponse = async () => {
@@ -31,6 +36,9 @@ const Home = () => {
 
     getResponse();
     getNewMessage();
+    getNewChannel();
+    subscribeRemoveChannel();
+    subscribeRenameChannel();
   });
 
   return (

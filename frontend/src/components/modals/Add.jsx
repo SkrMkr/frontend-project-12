@@ -31,6 +31,8 @@ const Add = (props) => {
       sendNewChannel(values.nameChannel);
       onHide();
     },
+    validateOnChange: false,
+    validateOnBlur: false,
   });
 
   return (

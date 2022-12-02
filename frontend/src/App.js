@@ -46,6 +46,7 @@ const PrivateAccess = ({ children }) => {
 
 const ChatProvider = ({ children }) => {
   const [currentChannelId, setCurrentChannelId] = useState(1);
+  const [feedback, setFeedback] = useState({ type: null, text: '' });
   const dispatch = useDispatch();
   const socket = io();
   const isConnected = () => socket.on('connect', () => {
@@ -59,40 +60,56 @@ const ChatProvider = ({ children }) => {
     console.log('response status', response.status);
   });
   const getNewChannel = () => socket.on('newChannel', (channel) => {
-    console.log('сообщение при подписке сокета на новый канал');
     dispatch(channelAction.addChannel(channel));
-    setCurrentChannelId(channel.id);
   });
+
   const sendNewChannel = (name) => socket.emit('newChannel', { name }, (response) => {
-    console.log('response status', response.status);
-    getNewChannel();
+    if (response.status !== 'response status ok') {
+      setFeedback({ type: 'error', text: 'Ошибка' });
+    }
+    setFeedback({ type: 'success', text: 'Канал создан' });
+    console.log(response.data.id);
+    setCurrentChannelId(response.data.id);
   });
+
   const subscribeRemoveChannel = () => socket.on('removeChannel', (payload) => {
     dispatch(channelAction.removeChannel(payload.id));
   });
-  const removeChannel = (id) => {
-    socket.emit('removeChannel', { id });
-    subscribeRemoveChannel();
-  };
+
+  const removeChannel = (id) => socket.emit('removeChannel', { id }, (response) => {
+    if (response.status !== 'response status ok') {
+      setFeedback({ type: 'error', text: 'Ошибка' });
+    }
+    setFeedback({ type: 'success', text: 'Канал удален' });
+  });
+
   const subscribeRenameChannel = () => socket.on('renameChannel', (payload) => {
     dispatch(channelAction.renameChannel({ id: payload.id, changes: payload }));
   });
-  const renameChannel = (id, name) => {
-    socket.emit('renameChannel', { id, name });
-    subscribeRenameChannel();
-  };
+
+  const renameChannel = (id, name) => socket.emit('renameChannel', { id, name }, (response) => {
+    if (response.status !== 'response status ok') {
+      setFeedback({ type: 'error', text: 'Ошибка' });
+    }
+    setFeedback({ type: 'success', text: 'Канал переименован' });
+  });
 
   return (
     // eslint-disable-next-line react/jsx-no-constructed-context-values
     <ChatContext.Provider value={{
+      feedback,
+      setFeedback,
       isConnected,
       getNewMessage,
       sendNewMessage,
+      getNewChannel,
       currentChannelId,
       setCurrentChannelId,
       sendNewChannel,
       removeChannel,
+      subscribeRemoveChannel,
       renameChannel,
+      subscribeRenameChannel,
     }}
     >
       {children}
