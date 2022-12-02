@@ -1,22 +1,70 @@
 import Container from 'react-bootstrap/Container';
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Dropdown from 'react-bootstrap/Dropdown';
 import { selectors } from '../slices/channelsSlice';
 import ChatContext from '../contexts/chat';
+import getModal from './modals/index';
+
+const renderModal = (modalInfo, hideModal) => {
+  if (modalInfo.type === null) {
+    return null;
+  }
+  const Component = getModal(modalInfo.type);
+  return <Component onHide={hideModal} channel={modalInfo.channel} />;
+};
+
+const ChannelItem = (props) => {
+  const {
+    channel,
+    currentChannelId,
+    setCurrentChannelId,
+    showModal,
+  } = props;
+  return (
+    <ListGroup.Item
+      active={channel.id === currentChannelId}
+      onClick={() => setCurrentChannelId(channel.id)}
+    >
+      <Row>
+        <Col>
+          <span>#</span>
+          {' '}
+          {channel.name}
+        </Col>
+        <Col>
+          <span>
+            <Dropdown>
+              <Dropdown.Toggle
+                size="sm"
+                variant="secondary"
+              />
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => showModal('removing', channel)}>Удалить</Dropdown.Item>
+                <Dropdown.Item onClick={() => showModal('renaming', channel)}>
+                  Переименовать
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </span>
+        </Col>
+      </Row>
+    </ListGroup.Item>
+  );
+};
 
 const ChannelsContainer = () => {
   const channels = useSelector(selectors.selectAll);
+  const [modalInfo, setModalInfo] = useState({ type: null, channelId: null });
+  const showModal = (nameModal, channel = null) => setModalInfo({ type: nameModal, channel });
+  const hideModal = () => setModalInfo({ type: null, channel: null });
   const chatContext = useContext(ChatContext);
   const { currentChannelId, setCurrentChannelId } = chatContext;
 
-  const showId = (id) => {
-    setCurrentChannelId(id);
-    console.log('just test for click');
-  };
   return (
     <div className="h-100">
       <Container>
@@ -25,22 +73,23 @@ const ChannelsContainer = () => {
             <span>Каналы</span>
           </Col>
           <Col md="auto">
-            <Button>+</Button>
+            <Button onClick={() => showModal('adding')}>+</Button>
           </Col>
         </Row>
       </Container>
       <Container>
         <ListGroup>
           {channels.map((channel) => (
-            <ListGroup.Item
+            <ChannelItem
               key={channel.id}
-              active={channel.id === currentChannelId}
-              onClick={() => showId(channel.id)}
-            >
-              {channel.name}
-            </ListGroup.Item>
+              channel={channel}
+              currentChannelId={currentChannelId}
+              setCurrentChannelId={setCurrentChannelId}
+              showModal={showModal}
+            />
           ))}
         </ListGroup>
+        {renderModal(modalInfo, hideModal)}
       </Container>
     </div>
   );

@@ -11,7 +11,6 @@ const OutputMessages = () => {
     return null;
   }
   const filteredMessages = messages.filter((message) => message.channelId === currentChannelId);
-  console.log(filteredMessages);
 
   return (
     <>

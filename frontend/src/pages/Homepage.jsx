@@ -23,7 +23,6 @@ const Home = () => {
           Authorization: tokenForRequest,
         },
       });
-      console.log(data);
       const { channels, messages } = data;
 
       dispatch(channelsAction.addChannels(channels));

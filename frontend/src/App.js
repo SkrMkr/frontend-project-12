@@ -11,6 +11,7 @@ import AuthContext from './contexts';
 import './App.css';
 import ChatContext from './contexts/chat';
 import { actions as messagesAction } from './slices/messagesSlice';
+import { actions as channelAction } from './slices/channelsSlice';
 
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -57,11 +58,41 @@ const ChatProvider = ({ children }) => {
   const sendNewMessage = (message) => socket.emit('newMessage', message, (response) => {
     console.log('response status', response.status);
   });
+  const getNewChannel = () => socket.on('newChannel', (channel) => {
+    console.log('сообщение при подписке сокета на новый канал');
+    dispatch(channelAction.addChannel(channel));
+    setCurrentChannelId(channel.id);
+  });
+  const sendNewChannel = (name) => socket.emit('newChannel', { name }, (response) => {
+    console.log('response status', response.status);
+    getNewChannel();
+  });
+  const subscribeRemoveChannel = () => socket.on('removeChannel', (payload) => {
+    dispatch(channelAction.removeChannel(payload.id));
+  });
+  const removeChannel = (id) => {
+    socket.emit('removeChannel', { id });
+    subscribeRemoveChannel();
+  };
+  const subscribeRenameChannel = () => socket.on('renameChannel', (payload) => {
+    dispatch(channelAction.renameChannel({ id: payload.id, changes: payload }));
+  });
+  const renameChannel = (id, name) => {
+    socket.emit('renameChannel', { id, name });
+    subscribeRenameChannel();
+  };
 
   return (
     // eslint-disable-next-line react/jsx-no-constructed-context-values
     <ChatContext.Provider value={{
-      isConnected, getNewMessage, sendNewMessage, currentChannelId, setCurrentChannelId,
+      isConnected,
+      getNewMessage,
+      sendNewMessage,
+      currentChannelId,
+      setCurrentChannelId,
+      sendNewChannel,
+      removeChannel,
+      renameChannel,
     }}
     >
       {children}
