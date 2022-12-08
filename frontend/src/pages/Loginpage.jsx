@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import AuthContext from '../contexts';
 import routes from '../routes';
 
@@ -39,7 +39,7 @@ const Loginpage = () => {
   };
 
   return (
-    <div className="flex-container">
+    <div>
       <h1>Войти</h1>
       <Formik
         initialValues={{
@@ -100,6 +100,11 @@ const Loginpage = () => {
         )}
       </Formik>
       {formState === 'network_error' && <Alert key="danger" variant="danger" dismissible>Ой, что-то пошло не так.</Alert>}
+      <div>
+        Нет аккаунта?
+        {' '}
+        <Link to="/signup">Регистрация</Link>
+      </div>
     </div>
   );
 };

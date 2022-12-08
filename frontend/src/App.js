@@ -4,9 +4,13 @@ import {
 } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Navbar from 'react-bootstrap/Navbar';
 import Home from './pages/Homepage';
 import Notfound from './pages/Notfoundpage';
 import Loginpage from './pages/Loginpage';
+import Signup from './pages/Signup';
 import AuthContext from './contexts';
 import './App.css';
 import ChatContext from './contexts/chat';
@@ -14,7 +18,8 @@ import { actions as messagesAction } from './slices/messagesSlice';
 import { actions as channelAction } from './slices/channelsSlice';
 
 const AuthProvider = ({ children }) => {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const stateInit = localStorage.token;
+  const [loggedIn, setLoggedIn] = useState(stateInit);
 
   const logIn = (token, username) => {
     setLoggedIn(true);
@@ -23,7 +28,9 @@ const AuthProvider = ({ children }) => {
   };
   const logOut = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('username');
     setLoggedIn(false);
+    window.location = '/login';
   };
 
   return (
@@ -32,6 +39,12 @@ const AuthProvider = ({ children }) => {
       loggedIn, logIn, logOut,
     }}
     >
+      <Navbar expand="lg" variant="light" bg="light">
+        <Container>
+          <Navbar.Brand><Link to="/">Hexlet Chat</Link></Navbar.Brand>
+          { loggedIn && <Button variant="primary" onClick={() => logOut()}>Выйти</Button>}
+        </Container>
+      </Navbar>
       {children}
     </AuthContext.Provider>
   );
@@ -127,6 +140,7 @@ const App = () => (
       <Routes>
         <Route path="/" element={<PrivateAccess><ChatProvider><Home /></ChatProvider></PrivateAccess>} />
         <Route path="/login" element={<Loginpage />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<Notfound />} />
       </Routes>
     </div>
