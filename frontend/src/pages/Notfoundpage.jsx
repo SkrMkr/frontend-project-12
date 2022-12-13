@@ -1,11 +1,15 @@
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-const Notfound = () => (
-  <div className="flex-container">
-    Страница не найдена. Но вы можете перейти
-    <Link to="/">на главную страницу</Link>
-    .
-  </div>
-);
+const Notfound = () => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="flex-container">
+      {t('notFound.title')}
+      <Link to="/">{t('notFound.link')}</Link>
+    </div>
+  );
+};
 
 export default Notfound;

@@ -6,6 +6,7 @@ import Alert from 'react-bootstrap/Alert';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import AuthContext from '../contexts';
 import routes from '../routes';
 
@@ -18,6 +19,7 @@ const Loginpage = () => {
   const [formState, setFormState] = useState('valid');
   const navigate = useNavigate();
   const userAuth = useContext(AuthContext);
+  const { t } = useTranslation();
   const goHome = () => navigate('/');
 
   const authorization = ({ username, password }) => {
@@ -40,7 +42,7 @@ const Loginpage = () => {
 
   return (
     <div>
-      <h1>Войти</h1>
+      <h1>{t('logIn.title')}</h1>
       <Formik
         initialValues={{
           username: '',
@@ -63,7 +65,7 @@ const Loginpage = () => {
                 name="username"
                 autoComplete="username"
                 required
-                placeholder="Ваш ник"
+                placeholder={t('placeholder.username_login')}
                 id="username"
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -80,7 +82,7 @@ const Loginpage = () => {
                 type="password"
                 autoComplete="password"
                 required
-                placeholder="Ваш пароль"
+                placeholder={t('placeholder.password')}
                 id="password"
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -92,18 +94,18 @@ const Loginpage = () => {
               </Form.Text>
               )}
             </Form.Group>
-            { formState === 'invalid' && <div className="feedback">Неверное имя пользователя или пароль.</div>}
+            { formState === 'invalid' && <div className="feedback">{t('logIn.errors.authorization')}</div>}
             <Button variant="primary" type="submit">
               Войти
             </Button>
           </Form>
         )}
       </Formik>
-      {formState === 'network_error' && <Alert key="danger" variant="danger" dismissible>Ой, что-то пошло не так.</Alert>}
+      {formState === 'network_error' && <Alert key="danger" variant="danger" dismissible>{t('logIn.errors.network_error')}</Alert>}
       <div>
-        Нет аккаунта?
+        {t('logIn.new_user')}
         {' '}
-        <Link to="/signup">Регистрация</Link>
+        <Link to="/signup">{t('signUp.title')}</Link>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { useFormik } from 'formik';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import { useTranslation } from 'react-i18next';
 import { selectors } from '../../slices/channelsSlice';
 import getValidationSchema from '../../validate';
 import ChatContext from '../../contexts/chat';
@@ -11,6 +12,7 @@ import ChatContext from '../../contexts/chat';
 const Rename = (props) => {
   const { onHide, channel } = props;
   const chatContext = useContext(ChatContext);
+  const { t } = useTranslation();
   const { renameChannel } = chatContext;
   const inputRef = useRef();
 
@@ -38,7 +40,7 @@ const Rename = (props) => {
   return (
     <Modal show>
       <Modal.Header closeButton onHide={onHide}>
-        <Modal.Title>Переименовать канал</Modal.Title>
+        <Modal.Title>{t('channels.modal.rename_title')}</Modal.Title>
       </Modal.Header>
       <form onSubmit={formik.handleSubmit}>
         <Modal.Body>
@@ -61,8 +63,8 @@ const Rename = (props) => {
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={onHide}>Отменить</Button>
-          <Button type="submit" value="submit">Отправить</Button>
+          <Button variant="secondary" onClick={onHide}>{t('channels.modal.cancel_button')}</Button>
+          <Button type="submit" value="submit">{t('channels.modal.send_button')}</Button>
         </Modal.Footer>
       </form>
     </Modal>

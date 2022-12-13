@@ -1,21 +1,15 @@
 import React, { useState } from 'react';
 import {
-  Route, Routes, Link, Navigate,
+  Route, Routes, Navigate,
 } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { io } from 'socket.io-client';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Navbar from 'react-bootstrap/Navbar';
 import Home from './pages/Homepage';
 import Notfound from './pages/Notfoundpage';
 import Loginpage from './pages/Loginpage';
 import Signup from './pages/Signup';
 import AuthContext from './contexts';
+import { ChatProvider } from './contexts/chat';
+import Header from './components/header';
 import './App.css';
-import ChatContext from './contexts/chat';
-import { actions as messagesAction } from './slices/messagesSlice';
-import { actions as channelAction } from './slices/channelsSlice';
 
 const AuthProvider = ({ children }) => {
   const stateInit = localStorage.token;
@@ -39,12 +33,7 @@ const AuthProvider = ({ children }) => {
       loggedIn, logIn, logOut,
     }}
     >
-      <Navbar expand="lg" variant="light" bg="light">
-        <Container>
-          <Navbar.Brand><Link to="/">Hexlet Chat</Link></Navbar.Brand>
-          { loggedIn && <Button variant="primary" onClick={() => logOut()}>Выйти</Button>}
-        </Container>
-      </Navbar>
+      <Header loggedIn={loggedIn} logOut={logOut} />
       {children}
     </AuthContext.Provider>
   );
@@ -57,86 +46,9 @@ const PrivateAccess = ({ children }) => {
   return children;
 };
 
-const ChatProvider = ({ children }) => {
-  const [currentChannelId, setCurrentChannelId] = useState(1);
-  const [feedback, setFeedback] = useState({ type: null, text: '' });
-  const dispatch = useDispatch();
-  const socket = io();
-  const isConnected = () => socket.on('connect', () => {
-    console.log('есть ли коннект', socket.connected);
-  });
-  const getNewMessage = () => socket.on('newMessage', (message) => {
-    console.log('сообщение при подписке сокета на новые сообщения', message);
-    dispatch(messagesAction.addMessage(message));
-  });
-  const sendNewMessage = (message) => socket.emit('newMessage', message, (response) => {
-    console.log('response status', response.status);
-  });
-  const getNewChannel = () => socket.on('newChannel', (channel) => {
-    dispatch(channelAction.addChannel(channel));
-  });
-
-  const sendNewChannel = (name) => socket.emit('newChannel', { name }, (response) => {
-    if (response.status !== 'response status ok') {
-      setFeedback({ type: 'error', text: 'Ошибка' });
-    }
-    setFeedback({ type: 'success', text: 'Канал создан' });
-    console.log(response.data.id);
-    setCurrentChannelId(response.data.id);
-  });
-
-  const subscribeRemoveChannel = () => socket.on('removeChannel', (payload) => {
-    dispatch(channelAction.removeChannel(payload.id));
-  });
-
-  const removeChannel = (id) => socket.emit('removeChannel', { id }, (response) => {
-    if (response.status !== 'response status ok') {
-      setFeedback({ type: 'error', text: 'Ошибка' });
-    }
-    setFeedback({ type: 'success', text: 'Канал удален' });
-  });
-
-  const subscribeRenameChannel = () => socket.on('renameChannel', (payload) => {
-    dispatch(channelAction.renameChannel({ id: payload.id, changes: payload }));
-  });
-
-  const renameChannel = (id, name) => socket.emit('renameChannel', { id, name }, (response) => {
-    if (response.status !== 'response status ok') {
-      setFeedback({ type: 'error', text: 'Ошибка' });
-    }
-    setFeedback({ type: 'success', text: 'Канал переименован' });
-  });
-
-  return (
-    // eslint-disable-next-line react/jsx-no-constructed-context-values
-    <ChatContext.Provider value={{
-      feedback,
-      setFeedback,
-      isConnected,
-      getNewMessage,
-      sendNewMessage,
-      getNewChannel,
-      currentChannelId,
-      setCurrentChannelId,
-      sendNewChannel,
-      removeChannel,
-      subscribeRemoveChannel,
-      renameChannel,
-      subscribeRenameChannel,
-    }}
-    >
-      {children}
-    </ChatContext.Provider>
-  );
-};
-
 const App = () => (
   <AuthProvider>
     <div>
-      <header>
-        <Link to="/">Домашняя страница </Link>
-        <Link to="/login">Логин</Link>
-      </header>
       <Routes>
         <Route path="/" element={<PrivateAccess><ChatProvider><Home /></ChatProvider></PrivateAccess>} />
         <Route path="/login" element={<Loginpage />} />

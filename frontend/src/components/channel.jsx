@@ -1,5 +1,6 @@
 import Container from 'react-bootstrap/Container';
 import React, { useState, useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
@@ -19,9 +20,10 @@ const renderModal = (modalInfo, hideModal) => {
 };
 
 const ChannelItem = (props) => {
+  const { t } = useTranslation();
   const {
     channel,
-    currentChannelId,
+    currentChannel,
     setCurrentChannelId,
     showModal,
   } = props;
@@ -29,7 +31,7 @@ const ChannelItem = (props) => {
   const permanentChannelsId = [1, 2];
   return (
     <ListGroup.Item
-      active={channel.id === currentChannelId}
+      active={channel.id === currentChannel.id}
       onClick={() => setCurrentChannelId(channel.id)}
     >
       <Row>
@@ -48,9 +50,9 @@ const ChannelItem = (props) => {
                 variant="secondary"
               />
               <Dropdown.Menu>
-                <Dropdown.Item onClick={() => showModal('removing', channel)}>Удалить</Dropdown.Item>
+                <Dropdown.Item onClick={() => showModal('removing', channel)}>{t('channels.remove')}</Dropdown.Item>
                 <Dropdown.Item onClick={() => showModal('renaming', channel)}>
-                  Переименовать
+                  {t('channels.rename')}
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -63,19 +65,20 @@ const ChannelItem = (props) => {
 };
 
 const ChannelsContainer = () => {
+  const { t } = useTranslation();
   const channels = useSelector(selectors.selectAll);
   const [modalInfo, setModalInfo] = useState({ type: null, channelId: null });
   const showModal = (nameModal, channel = null) => setModalInfo({ type: nameModal, channel });
   const hideModal = () => setModalInfo({ type: null, channel: null });
   const chatContext = useContext(ChatContext);
-  const { currentChannelId, setCurrentChannelId } = chatContext;
+  const { currentChannel, setCurrentChannelId } = chatContext;
 
   return (
     <div className="h-100">
       <Container>
         <Row>
           <Col>
-            <span>Каналы</span>
+            <span>{t('channels.title')}</span>
           </Col>
           <Col md="auto">
             <Button onClick={() => showModal('adding')}>+</Button>
@@ -88,7 +91,7 @@ const ChannelsContainer = () => {
             <ChannelItem
               key={channel.id}
               channel={channel}
-              currentChannelId={currentChannelId}
+              currentChannel={currentChannel}
               setCurrentChannelId={setCurrentChannelId}
               showModal={showModal}
             />

@@ -1,4 +1,5 @@
 import { useState, useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
@@ -9,8 +10,9 @@ import getShema from '../validate';
 import AuthContext from '../contexts';
 
 const Signup = () => {
-  const [userRegistered, setUserRegistered] = useState(false);
+  const [state, setState] = useState('');
   const authContext = useContext(AuthContext);
+  const { t } = useTranslation();
   const { logIn } = authContext;
 
   const navigate = useNavigate();
@@ -27,8 +29,11 @@ const Signup = () => {
         goHome();
       })
       .catch((e) => {
-        console.log(e);
-        setUserRegistered(true);
+        if (e.response.status !== 409) {
+          setState('network_error');
+          return;
+        }
+        setState('user_registered');
       });
   };
 
@@ -46,12 +51,12 @@ const Signup = () => {
   return (
     <div>
       <Form onSubmit={formik.handleSubmit}>
-        <Form.Label>Регистрация</Form.Label>
+        <Form.Label>{t('signUp.title')}</Form.Label>
         <Form.Group className="mb-3">
           <Form.Control
             name="username"
             id="username"
-            placeholder="Имя пользователя"
+            placeholder={t('placeholder.username')}
             value={formik.values.username}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -69,7 +74,7 @@ const Signup = () => {
             type="password"
             name="password"
             id="password"
-            placeholder="Пароль"
+            placeholder={t('placeholder.password')}
             value={formik.values.password}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -87,7 +92,7 @@ const Signup = () => {
             name="passwordConfirm"
             id="passwordConfirm"
             type="password"
-            placeholder="Подтвердите пароль"
+            placeholder={t('placeholder.passwordConfirm')}
             value={formik.values.passwordConfirm}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -100,9 +105,10 @@ const Signup = () => {
             {formik.errors.passwordConfirm}
           </div>
           )}
-        {userRegistered && <div className="text-muted">Такой пользователь уже существует.</div>}
+        {state === 'user_registered' && <div className="text-muted">{t('signUp.errors.user_registered')}</div>}
+        {state === 'network_error' && <div className="text-muted">{t('signUp.errors.network_error')}</div>}
         <Button variant="primary" type="submit">
-          Зарегистрироваться
+          {t('signUp.button')}
         </Button>
       </Form>
     </div>

@@ -3,17 +3,19 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import { useTranslation } from 'react-i18next';
 import ChatContext from '../contexts/chat';
 
 const InputMessage = () => {
   const [text, setText] = useState('');
   const chatContext = useContext(ChatContext);
-  const { sendNewMessage, currentChannelId } = chatContext;
+  const { t } = useTranslation();
+  const { sendNewMessage, currentChannel } = chatContext;
 
   const sendMessage = () => {
     const message = {
       body: text,
-      channelId: currentChannelId,
+      channelId: currentChannel.id,
       username: localStorage.username,
     };
     sendNewMessage(message);
@@ -28,7 +30,7 @@ const InputMessage = () => {
     >
       <Row>
         <Col lg>
-          <Form.Control type="text" placeholder="Введите сообщение..." value={text} onChange={(e) => setText(e.target.value)} />
+          <Form.Control type="text" placeholder={t('placeholder.input_message')} value={text} onChange={(e) => setText(e.target.value)} />
         </Col>
         <Col xs>
           <Button variant="light" type="submit" disabled={text === ''}>

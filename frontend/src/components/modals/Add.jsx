@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { selectors } from '../../slices/channelsSlice';
 import ChatContext from '../../contexts/chat';
 import getValidationSchema from '../../validate';
@@ -11,6 +12,7 @@ import getValidationSchema from '../../validate';
 const Add = (props) => {
   const inputRef = useRef();
   const chatContext = useContext(ChatContext);
+  const { t } = useTranslation();
   const { sendNewChannel } = chatContext;
   const { onHide } = props;
 
@@ -38,7 +40,7 @@ const Add = (props) => {
   return (
     <Modal show>
       <Modal.Header closeButton onHide={onHide}>
-        <Modal.Title>Добавить канал</Modal.Title>
+        <Modal.Title>{t('channels.modal.add_title')}</Modal.Title>
       </Modal.Header>
       <form onSubmit={formik.handleSubmit}>
         <Modal.Body>
@@ -61,8 +63,8 @@ const Add = (props) => {
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={onHide}>Отменить</Button>
-          <Button type="submit" value="submit">Отправить</Button>
+          <Button variant="secondary" onClick={onHide}>{t('channels.modal.cancel_button')}</Button>
+          <Button type="submit" value="submit">{t('channels.modal.send_button')}</Button>
         </Modal.Footer>
       </form>
     </Modal>

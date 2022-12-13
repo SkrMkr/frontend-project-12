@@ -5,12 +5,12 @@ import ChatContext from '../contexts/chat';
 
 const OutputMessages = () => {
   const chatContext = useContext(ChatContext);
-  const { currentChannelId } = chatContext;
+  const { currentChannel } = chatContext;
   const messages = useSelector(selectors.selectAll);
   if (messages.length === 0) {
     return null;
   }
-  const filteredMessages = messages.filter((message) => message.channelId === currentChannelId);
+  const filteredMessages = messages.filter((message) => message.channelId === currentChannel.id);
 
   return (
     <>
