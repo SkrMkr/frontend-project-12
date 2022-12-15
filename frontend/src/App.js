@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Provider, ErrorBoundary } from '@rollbar/react';
+import Rollbar from 'rollbar';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -55,12 +56,11 @@ const App = ({ socket }) => {
   const rollbarConfig = {
     accessToken: 'f0b16381592541e6b64bd476533bcc6d',
     environment: 'development',
+    captureUncaught: true,
+    captureUnhandledRejections: true,
   };
 
-  function TestError() {
-    const a = null;
-    return a.hello();
-  }
+  const rollbar = new Rollbar(rollbarConfig);
 
   const notify = (type, text) => {
     if (type === 'success') {
@@ -75,14 +75,13 @@ const App = ({ socket }) => {
   useEffect(() => {
     socket.on('connect_error', (e) => {
       setFeedback({ type: 'error', text: t('feedback.error_network') });
-      console.log(e);
+      rollbar.error(e);
     });
   }, []);
 
   return (
     <Provider config={rollbarConfig}>
       <ErrorBoundary>
-        <TestError />
         <AuthProvider>
           <div>
             <Routes>
