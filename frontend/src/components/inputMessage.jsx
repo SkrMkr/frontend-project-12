@@ -19,7 +19,8 @@ const InputMessage = () => {
       username: localStorage.username,
     };
     sendNewMessage(message);
-    setText('');
+    throw new Error('message');
+    // setText('');
   };
 
   return (

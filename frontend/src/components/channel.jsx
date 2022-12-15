@@ -24,15 +24,14 @@ const ChannelItem = (props) => {
   const {
     channel,
     currentChannel,
-    setCurrentChannelId,
+    setCurrentChannel,
     showModal,
   } = props;
 
-  const permanentChannelsId = [1, 2];
   return (
     <ListGroup.Item
       active={channel.id === currentChannel.id}
-      onClick={() => setCurrentChannelId(channel.id)}
+      onClick={() => setCurrentChannel(channel)}
     >
       <Row>
         <Col>
@@ -40,7 +39,7 @@ const ChannelItem = (props) => {
           {' '}
           {channel.name}
         </Col>
-        {!permanentChannelsId.includes(channel.id)
+        {channel.removable
         && (
         <Col>
           <span>
@@ -71,7 +70,7 @@ const ChannelsContainer = () => {
   const showModal = (nameModal, channel = null) => setModalInfo({ type: nameModal, channel });
   const hideModal = () => setModalInfo({ type: null, channel: null });
   const chatContext = useContext(ChatContext);
-  const { currentChannel, setCurrentChannelId } = chatContext;
+  const { currentChannel, setCurrentChannel } = chatContext;
 
   return (
     <div className="h-100">
@@ -92,7 +91,7 @@ const ChannelsContainer = () => {
               key={channel.id}
               channel={channel}
               currentChannel={currentChannel}
-              setCurrentChannelId={setCurrentChannelId}
+              setCurrentChannel={setCurrentChannel}
               showModal={showModal}
             />
           ))}

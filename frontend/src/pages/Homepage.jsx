@@ -3,6 +3,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import React, { useEffect, useContext } from 'react';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import ChannelsContainer from '../components/channel';
 import ChatContainer from '../components/chatContainer';
 import { actions as channelsAction } from '../slices/channelsSlice';
@@ -12,8 +13,10 @@ import ChatContext from '../contexts/chat';
 
 const Home = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation;
   const chatContext = useContext(ChatContext);
   const {
+    setFeedback,
     getNewChannel,
     getNewMessage,
     subscribeRemoveChannel,
@@ -23,15 +26,19 @@ const Home = () => {
   useEffect(() => {
     const getResponse = async () => {
       const tokenForRequest = `Bearer ${localStorage.getItem('token')}`;
-      const { data } = await axios.get(routes.usersPath(), {
-        headers: {
-          Authorization: tokenForRequest,
-        },
-      });
-      const { channels, messages } = data;
+      try {
+        const { data } = await axios.get(routes.usersPath(), {
+          headers: {
+            Authorization: tokenForRequest,
+          },
+        });
+        const { channels, messages } = data;
 
-      dispatch(channelsAction.addChannels(channels));
-      dispatch(messagesAction.addMessages(messages));
+        dispatch(channelsAction.addChannels(channels));
+        dispatch(messagesAction.addMessages(messages));
+      } catch (e) {
+        setFeedback({ type: 'error', text: t('feedback.error_network') });
+      }
     };
 
     getResponse();

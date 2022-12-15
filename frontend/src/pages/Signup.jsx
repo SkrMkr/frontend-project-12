@@ -9,7 +9,7 @@ import routes from '../routes';
 import getShema from '../validate';
 import AuthContext from '../contexts';
 
-const Signup = () => {
+const Signup = ({ setFeedback }) => {
   const [state, setState] = useState('');
   const authContext = useContext(AuthContext);
   const { t } = useTranslation();
@@ -30,7 +30,7 @@ const Signup = () => {
       })
       .catch((e) => {
         if (e.response.status !== 409) {
-          setState('network_error');
+          setFeedback({ type: 'error', text: t('feedback.error_network') });
           return;
         }
         setState('user_registered');
@@ -106,7 +106,6 @@ const Signup = () => {
           </div>
           )}
         {state === 'user_registered' && <div className="text-muted">{t('signUp.errors.user_registered')}</div>}
-        {state === 'network_error' && <div className="text-muted">{t('signUp.errors.network_error')}</div>}
         <Button variant="primary" type="submit">
           {t('signUp.button')}
         </Button>

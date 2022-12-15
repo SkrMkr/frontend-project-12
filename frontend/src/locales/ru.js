@@ -51,6 +51,7 @@ export default {
     },
     feedback: {
       error: 'Ошибка',
+      error_network: 'Ошибка соединения',
       channel_add: 'Канал создан',
       channel_remove: 'Канал удален',
       channel_rename: 'Канал переименован',

@@ -2,7 +2,6 @@ import { Formik } from 'formik';
 import React, { useContext, useState } from 'react';
 import * as yup from 'yup';
 import Button from 'react-bootstrap/Button';
-import Alert from 'react-bootstrap/Alert';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
@@ -15,7 +14,7 @@ const schema = yup.object().shape({
   password: yup.string().required('Обязательное поле'),
 });
 
-const Loginpage = () => {
+const Loginpage = ({ setFeedback }) => {
   const [formState, setFormState] = useState('valid');
   const navigate = useNavigate();
   const userAuth = useContext(AuthContext);
@@ -33,7 +32,7 @@ const Loginpage = () => {
       })
       .catch((e) => {
         if (e.response.status !== 401) {
-          setFormState('network_error');
+          setFeedback({ type: 'error', text: t('feedback.error_network') });
           return;
         }
         setFormState('invalid');
@@ -101,7 +100,6 @@ const Loginpage = () => {
           </Form>
         )}
       </Formik>
-      {formState === 'network_error' && <Alert key="danger" variant="danger" dismissible>{t('logIn.errors.network_error')}</Alert>}
       <div>
         {t('logIn.new_user')}
         {' '}
