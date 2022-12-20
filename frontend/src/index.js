@@ -12,6 +12,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './i18n';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 const socket = io();
 root.render(
   <React.StrictMode>

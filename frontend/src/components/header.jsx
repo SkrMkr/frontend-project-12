@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
@@ -9,12 +8,12 @@ const Header = (props) => {
   const { loggedIn, logOut } = props;
 
   return (
-    <Navbar expand="lg" variant="light" bg="light">
-      <Container>
+    <Navbar className="shadow-sm bg-white" expand="lg" variant="light">
+      <Container className="d-flex p-2">
         <Navbar.Brand>
-          <Link to="/">
+          <a href="/" className="link-dark text-decoration-none">
             {t('header.title')}
-          </Link>
+          </a>
         </Navbar.Brand>
         { loggedIn && <Button variant="primary" onClick={() => logOut()}>{t('header.button_exit')}</Button>}
       </Container>

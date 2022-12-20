@@ -8,6 +8,7 @@ import Form from 'react-bootstrap/Form';
 import routes from '../routes';
 import getShema from '../validate';
 import AuthContext from '../contexts';
+import registration from '../images/registration.jpg';
 
 const Signup = ({ setFeedback }) => {
   const [state, setState] = useState('');
@@ -49,67 +50,75 @@ const Signup = ({ setFeedback }) => {
   });
 
   return (
-    <div>
-      <Form onSubmit={formik.handleSubmit}>
-        <Form.Label>{t('signUp.title')}</Form.Label>
-        <Form.Group className="mb-3">
-          <Form.Control
-            name="username"
-            id="username"
-            placeholder={t('placeholder.username')}
-            value={formik.values.username}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-          {formik.touched.username
-          && formik.errors.username
-          && (
-          <div className="text-muted">
-            {formik.errors.username}
-          </div>
-          )}
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Control
-            type="password"
-            name="password"
-            id="password"
-            placeholder={t('placeholder.password')}
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-        </Form.Group>
-        {formik.touched.password
+    <div className="row justify-content-center align-content-center flex-grow-1 bg-light">
+      <div className="col-12 col-md-8 col-xxl-6">
+        <div className="d-flex card shadow-sm">
+          <div className="card-body d-flex flex-column flex-md-row justify-content-around align-items-center p-5">
+            <div>
+              <img src={registration} alt={t('signUp.title')} className="rounded-circle" />
+            </div>
+            <Form className="w-50" onSubmit={formik.handleSubmit}>
+              <h1 className="text-center mb-4">{t('signUp.title')}</h1>
+              <Form.Group className="mb-3">
+                <Form.Control
+                  name="username"
+                  id="username"
+                  value={formik.values.username}
+                  placeholder={t('placeholder.username')}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className={formik.touched.username
+                    && formik.errors.username ? 'is-invalid' : ''}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Control
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder={t('placeholder.password')}
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className={formik.touched.password
+                    && formik.errors.password ? 'is-invalid' : ''}
+                />
+              </Form.Group>
+              {formik.touched.password
           && formik.errors.password
           && (
           <div className="text-muted">
             {formik.errors.password}
           </div>
           )}
-        <Form.Group className="mb-3">
-          <Form.Control
-            name="passwordConfirm"
-            id="passwordConfirm"
-            type="password"
-            placeholder={t('placeholder.passwordConfirm')}
-            value={formik.values.passwordConfirm}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-        </Form.Group>
-        {formik.touched.passwordConfirm
+              <Form.Group className="mb-4">
+                <Form.Control
+                  name="passwordConfirm"
+                  id="passwordConfirm"
+                  type="password"
+                  placeholder={t('placeholder.passwordConfirm')}
+                  value={formik.values.passwordConfirm}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className={formik.touched.passwordConfirm
+                    && formik.errors.passwordConfirm ? 'is-invalid' : ''}
+                />
+              </Form.Group>
+              {formik.touched.passwordConfirm
           && formik.errors.passwordConfirm
           && (
           <div className="text-muted">
             {formik.errors.passwordConfirm}
           </div>
           )}
-        {state === 'user_registered' && <div className="text-muted">{t('signUp.errors.user_registered')}</div>}
-        <Button variant="primary" type="submit">
-          {t('signUp.button')}
-        </Button>
-      </Form>
+              {state === 'user_registered' && <div className="text-muted">{t('signUp.errors.user_registered')}</div>}
+              <Button className="w-100" variant="outline-primary" type="submit">
+                {t('signUp.button')}
+              </Button>
+            </Form>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,10 @@
 import { Formik } from 'formik';
-import React, { useContext, useState } from 'react';
+import React, {
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+} from 'react';
 import * as yup from 'yup';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -8,6 +13,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import AuthContext from '../contexts';
 import routes from '../routes';
+import image from '../images/login.jpeg';
 
 const schema = yup.object().shape({
   username: yup.string().required('Обязательное поле'),
@@ -19,6 +25,7 @@ const Loginpage = ({ setFeedback }) => {
   const navigate = useNavigate();
   const userAuth = useContext(AuthContext);
   const { t } = useTranslation();
+  const ref = useRef();
   const goHome = () => navigate('/');
 
   const authorization = ({ username, password }) => {
@@ -39,71 +46,78 @@ const Loginpage = ({ setFeedback }) => {
       });
   };
 
+  useEffect(() => {
+    ref.current.focus();
+  }, []);
+
   return (
-    <div>
-      <h1>{t('logIn.title')}</h1>
-      <Formik
-        initialValues={{
-          username: '',
-          password: '',
-        }}
-        validationSchema={schema}
-        onSubmit={(values) => authorization(values)}
-      >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-        }) => (
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="username">
-              <Form.Control
-                name="username"
-                autoComplete="username"
-                required
-                placeholder={t('placeholder.username_login')}
-                id="username"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.username}
-              />
-              {touched.username && errors.username && (
-              <Form.Text className="text-muted">
-                {errors.username}
-              </Form.Text>
+    <div className="d-flex justify-content-center align-items-center flex-grow-1 bg-light">
+      <div className="col-md-8 col-12 col-xxl-6">
+        <div className="card shadow-sm">
+          <div className="card-body row p-5">
+            <div className="col-12 col-md-6 d-flex align-items-center justify-content-center">
+              <img src={image} alt={t('logIn.title')} className="rounded-circle" />
+            </div>
+            <Formik
+              initialValues={{
+                username: '',
+                password: '',
+              }}
+              validationSchema={schema}
+              onSubmit={(values) => authorization(values)}
+              validateOnChange="false"
+            >
+              {({
+                values,
+                handleChange,
+                handleBlur,
+                handleSubmit,
+              }) => (
+                <Form onSubmit={handleSubmit} className="col-12 col-md-6 mt-3 mt-mb-0">
+                  <h1 className="text-center mb-4">{t('logIn.title')}</h1>
+                  <Form.Group className="mb-3" controlId="username">
+                    <Form.Control
+                      name="username"
+                      autoComplete="username"
+                      required
+                      placeholder={t('placeholder.username_login')}
+                      id="username"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.username}
+                      ref={ref}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3" controlId="username">
+                    <Form.Control
+                      type="password"
+                      autoComplete="password"
+                      required
+                      placeholder={t('placeholder.password')}
+                      id="password"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.password}
+                    />
+                  </Form.Group>
+                  { formState === 'invalid' && <div className="feedback">{t('logIn.errors.authorization')}</div>}
+                  <div className="d-grid gap-2">
+                    <Button variant="outline-primary" type="submit">
+                      Войти
+                    </Button>
+                  </div>
+                </Form>
               )}
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="username">
-              <Form.Control
-                type="password"
-                autoComplete="password"
-                required
-                placeholder={t('placeholder.password')}
-                id="password"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.password}
-              />
-              {touched.password && errors.password && (
-              <Form.Text className="text-muted">
-                {errors.password}
-              </Form.Text>
-              )}
-            </Form.Group>
-            { formState === 'invalid' && <div className="feedback">{t('logIn.errors.authorization')}</div>}
-            <Button variant="primary" type="submit">
-              Войти
-            </Button>
-          </Form>
-        )}
-      </Formik>
-      <div>
-        {t('logIn.new_user')}
-        {' '}
-        <Link to="/signup">{t('signUp.title')}</Link>
+            </Formik>
+          </div>
+          <div className="card-footer p-4">
+            <div className="text-center">
+              {t('logIn.new_user')}
+              {' '}
+              <Link to="/signup">{t('signUp.title')}</Link>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

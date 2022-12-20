@@ -1,6 +1,4 @@
 import axios from 'axios';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import React, { useEffect, useContext } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -49,15 +47,15 @@ const Home = () => {
   });
 
   return (
-    <div className="flex-container h-100">
-      <Row className="justify-content-md-center h-100">
-        <Col lg={6} md={4}>
+    <div className="container rounded my-4 h-100 overflow-hidden shadow flex-grow-1">
+      <div className="row d-flex flex-row bg-white h-100">
+        <div className="col-4 col-md-2 border-end pt-5 px-0 bg-light">
           <ChannelsContainer />
-        </Col>
-        <Col lg={12} md={8}>
+        </div>
+        <div className="col h-100 p-0">
           <ChatContainer />
-        </Col>
-      </Row>
+        </div>
+      </div>
     </div>
   );
 };

@@ -8,9 +8,11 @@ export default {
       message_one: '{{count}} сообщениe',
       message_few: '{{count}} сообщения',
       message_many: '{{count}} сообщений',
+      send: 'Отправить',
     },
     channels: {
       title: 'Каналы',
+      control: 'Управление каналами',
       remove: 'Удалить',
       rename: 'Переименовать',
       modal: {
@@ -46,7 +48,8 @@ export default {
       input_message: 'Введите сообщение...',
     },
     notFound: {
-      title: 'Страница не найдена. Но вы можете перейти',
+      title: 'Страница не найдена.',
+      feedback: 'Но вы можете перейти',
       link: 'на главную страницу.',
     },
     feedback: {

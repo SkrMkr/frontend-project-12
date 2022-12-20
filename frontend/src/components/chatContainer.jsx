@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import Container from 'react-bootstrap/Container';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import ChatContext from '../contexts/chat';
@@ -18,17 +17,23 @@ const ChatContainer = () => {
   const filteredMessages = messages.filter((message) => message.channelId === currentChannel.id);
 
   return (
-    <div className="flex-column h-100">
-      <Container>
-        <h4>{currentChannel.name}</h4>
-        <div>{t('chat_container.message', { count: filteredMessages.length })}</div>
-      </Container>
-      <Container>
+    <div className="d-flex flex-column h-100">
+      <div className="bg-light mb-4 p-3 shadow-sm small">
+        <p className="m-0">
+          <b>
+            {currentChannel.name}
+          </b>
+        </p>
+        <span className="text-muted">
+          {t('chat_container.message', { count: filteredMessages.length })}
+        </span>
+      </div>
+      <div className="overflow-auto flex-grow-1 px-5">
         <OutputMessages />
-      </Container>
-      <Container className="input-message">
+      </div>
+      <div className="mt-auto px-5 py-3">
         <InputMessage />
-      </Container>
+      </div>
     </div>
   );
 };

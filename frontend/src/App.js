@@ -83,36 +83,34 @@ const App = ({ socket }) => {
     <Provider config={rollbarConfig}>
       <ErrorBoundary>
         <AuthProvider>
-          <div>
-            <Routes>
-              <Route
-                path="/"
-                element={(
-                  <PrivateAccess>
-                    <ChatProvider socket={socket} setFeedback={setFeedback}>
-                      <Home />
-                    </ChatProvider>
-                  </PrivateAccess>
+          <Routes>
+            <Route
+              path="/"
+              element={(
+                <PrivateAccess>
+                  <ChatProvider socket={socket} setFeedback={setFeedback}>
+                    <Home />
+                  </ChatProvider>
+                </PrivateAccess>
           )}
-              />
-              <Route path="/login" element={<Loginpage setFeedback={setFeedback} />} />
-              <Route path="/signup" element={<Signup setFeedback={setFeedback} />} />
-              <Route path="*" element={<Notfound />} />
-            </Routes>
-            { feedback.type !== null && notify(feedback.type, feedback.text)}
-            <ToastContainer
-              position="top-right"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="light"
             />
-          </div>
+            <Route path="/login" element={<Loginpage setFeedback={setFeedback} />} />
+            <Route path="/signup" element={<Signup setFeedback={setFeedback} />} />
+            <Route path="*" element={<Notfound />} />
+          </Routes>
+          { feedback.type !== null && notify(feedback.type, feedback.text)}
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
         </AuthProvider>
       </ErrorBoundary>
     </Provider>

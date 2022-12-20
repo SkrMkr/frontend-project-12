@@ -21,7 +21,7 @@ const OutputMessages = () => {
   return (
     <>
       { filteredMessages.map((message) => (
-        <div key={message.id}>
+        <div key={message.id} className="text-break mb-2">
           <b>{message.username}</b>
           :
           {' '}
