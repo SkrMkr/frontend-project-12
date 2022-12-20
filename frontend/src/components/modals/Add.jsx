@@ -38,7 +38,7 @@ const Add = (props) => {
   });
 
   return (
-    <Modal show>
+    <Modal show centered>
       <Modal.Header closeButton onHide={onHide}>
         <Modal.Title>{t('channels.modal.add_title')}</Modal.Title>
       </Modal.Header>

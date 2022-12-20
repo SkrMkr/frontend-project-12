@@ -38,7 +38,7 @@ const Rename = (props) => {
   }, []);
 
   return (
-    <Modal show>
+    <Modal show centered>
       <Modal.Header closeButton onHide={onHide}>
         <Modal.Title>{t('channels.modal.rename_title')}</Modal.Title>
       </Modal.Header>
