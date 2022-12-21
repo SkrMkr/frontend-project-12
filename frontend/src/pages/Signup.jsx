@@ -66,7 +66,7 @@ const Signup = ({ setFeedback }) => {
               <h1 className="text-center mb-4">{t('signUp.title')}</h1>
               <Form.Group className="mb-3">
                 <FloatingLabel
-                  controlId="floatingInputUsername"
+                  controlId="username"
                   label={t('placeholder.username')}
                   className="mb-3"
                 >
@@ -90,7 +90,7 @@ const Signup = ({ setFeedback }) => {
               </Form.Group>
               <Form.Group className="mb-3">
                 <FloatingLabel
-                  controlId="floatingInputPassword"
+                  controlId="password"
                   label={t('placeholder.password')}
                   className="mb-3"
                 >
@@ -115,7 +115,7 @@ const Signup = ({ setFeedback }) => {
               </Form.Group>
               <Form.Group className="mb-4">
                 <FloatingLabel
-                  controlId="floatingInputPasswordConf"
+                  controlId="passwordConfirm"
                   label={t('placeholder.passwordConfirm')}
                   className="mb-3"
                 >
