@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import * as yup from 'yup';
 import Button from 'react-bootstrap/Button';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
@@ -14,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import AuthContext from '../contexts';
 import routes from '../routes';
 import image from '../images/login.jpeg';
+import FeedbackTooltip from '../components/feedbackTooltip';
 
 const schema = yup.object().shape({
   username: yup.string().required('Обязательное поле'),
@@ -26,6 +28,7 @@ const Loginpage = ({ setFeedback }) => {
   const userAuth = useContext(AuthContext);
   const { t } = useTranslation();
   const ref = useRef();
+  const pasRef = useRef();
   const goHome = () => navigate('/');
 
   const authorization = ({ username, password }) => {
@@ -76,32 +79,49 @@ const Loginpage = ({ setFeedback }) => {
                 <Form onSubmit={handleSubmit} className="col-12 col-md-6 mt-3 mt-mb-0">
                   <h1 className="text-center mb-4">{t('logIn.title')}</h1>
                   <Form.Group className="mb-3" controlId="username">
-                    <Form.Control
-                      name="username"
-                      autoComplete="username"
-                      required
-                      placeholder={t('placeholder.username_login')}
-                      id="username"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.username}
-                      ref={ref}
-                    />
+                    <FloatingLabel
+                      controlId="username"
+                      label={t('placeholder.username_login')}
+                      className="mb-3"
+                    >
+                      <Form.Control
+                        name="username"
+                        autoComplete="username"
+                        required
+                        placeholder={t('placeholder.username_login')}
+                        id="username"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.username}
+                        ref={ref}
+                      />
+                    </FloatingLabel>
                   </Form.Group>
-                  <Form.Group className="mb-3" controlId="username">
-                    <Form.Control
-                      type="password"
-                      autoComplete="password"
-                      required
-                      placeholder={t('placeholder.password')}
-                      id="password"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.password}
-                    />
+                  <Form.Group className="mb-3" controlId="password">
+                    <FloatingLabel
+                      controlId="password"
+                      label={t('placeholder.password')}
+                      className="mb-3"
+                    >
+                      <Form.Control
+                        type="password"
+                        autoComplete="password"
+                        required
+                        placeholder={t('placeholder.password')}
+                        id="password"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.password}
+                      />
+                    </FloatingLabel>
                   </Form.Group>
-                  { formState === 'invalid' && <div className="feedback">{t('logIn.errors.authorization')}</div>}
                   <div className="d-grid gap-2">
+                    <FeedbackTooltip
+                      target={pasRef.current}
+                      show={formState === 'invalid'}
+                      text={t('logIn.errors.authorization')}
+                      ref={pasRef}
+                    />
                     <Button variant="outline-primary" type="submit">
                       Войти
                     </Button>

@@ -28,7 +28,7 @@ export default {
       title: 'Войти',
       new_user: 'Нет аккаунта?',
       errors: {
-        authorization: 'Неверное имя пользователя или пароль.',
+        authorization: 'Неверные имя пользователя или пароль.',
         network_error: 'Ой, что-то пошло не так.',
       },
     },
