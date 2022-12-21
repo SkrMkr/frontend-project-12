@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useFormik } from 'formik';
@@ -9,11 +9,15 @@ import routes from '../routes';
 import getShema from '../validate';
 import AuthContext from '../contexts';
 import registration from '../images/registration.jpg';
+import FeedbackTooltip from '../components/feedbackTooltip';
 
 const Signup = ({ setFeedback }) => {
   const [state, setState] = useState('');
   const authContext = useContext(AuthContext);
   const { t } = useTranslation();
+  const targetUsername = useRef();
+  const targetPassword = useRef();
+  const targetPasswordConf = useRef();
   const { logIn } = authContext;
 
   const navigate = useNavigate();
@@ -67,6 +71,7 @@ const Signup = ({ setFeedback }) => {
                   placeholder={t('placeholder.username')}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
+                  ref={targetUsername}
                   className={formik.touched.username
                     && formik.errors.username ? 'is-invalid' : ''}
                 />
@@ -80,17 +85,11 @@ const Signup = ({ setFeedback }) => {
                   value={formik.values.password}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
+                  ref={targetPassword}
                   className={formik.touched.password
                     && formik.errors.password ? 'is-invalid' : ''}
                 />
               </Form.Group>
-              {formik.touched.password
-          && formik.errors.password
-          && (
-          <div className="text-muted">
-            {formik.errors.password}
-          </div>
-          )}
               <Form.Group className="mb-4">
                 <Form.Control
                   name="passwordConfirm"
@@ -100,22 +99,31 @@ const Signup = ({ setFeedback }) => {
                   value={formik.values.passwordConfirm}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
+                  ref={targetPasswordConf}
                   className={formik.touched.passwordConfirm
                     && formik.errors.passwordConfirm ? 'is-invalid' : ''}
                 />
               </Form.Group>
-              {formik.touched.passwordConfirm
-          && formik.errors.passwordConfirm
-          && (
-          <div className="text-muted">
-            {formik.errors.passwordConfirm}
-          </div>
-          )}
               {state === 'user_registered' && <div className="text-muted">{t('signUp.errors.user_registered')}</div>}
               <Button className="w-100" variant="outline-primary" type="submit">
                 {t('signUp.button')}
               </Button>
             </Form>
+            <FeedbackTooltip
+              target={targetUsername.current}
+              show={formik.errors.username && formik.touched.username}
+              text={formik.errors.username}
+            />
+            <FeedbackTooltip
+              target={targetPassword.current}
+              show={formik.errors.password && formik.touched.password}
+              text={formik.errors.password}
+            />
+            <FeedbackTooltip
+              target={targetPasswordConf.current}
+              show={formik.errors.passwordConfirm && formik.touched.passwordConfirm}
+              text={formik.errors.passwordConfirm}
+            />
           </div>
         </div>
       </div>
