@@ -22,7 +22,6 @@ const shemas = {
     passwordConfirm: yup
       .string()
       .required('Обязательное поле')
-      .min(6, 'Не менее 6 символов')
       .oneOf([yup.ref('password'), null], 'Пароли должны совпадать'),
   }),
 };
