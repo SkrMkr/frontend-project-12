@@ -106,7 +106,7 @@ const Signup = ({ setFeedback }) => {
               <Form.Group className="mb-4">
                 <FloatingLabel
                   controlId="floatingInputPasswordConf"
-                  label={t('placeholder.password')}
+                  label={t('placeholder.passwordConfirm')}
                   className="mb-3"
                 >
                   <Form.Control
