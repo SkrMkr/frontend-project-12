@@ -82,6 +82,11 @@ const Signup = ({ setFeedback }) => {
                     && formik.errors.username ? 'is-invalid' : ''}
                   />
                 </FloatingLabel>
+                <FeedbackTooltip
+                  target={targetUsername.current}
+                  show={formik.errors.username && formik.touched.username}
+                  text={formik.errors.username}
+                />
               </Form.Group>
               <Form.Group className="mb-3">
                 <FloatingLabel
@@ -102,6 +107,11 @@ const Signup = ({ setFeedback }) => {
                     && formik.errors.password ? 'is-invalid' : ''}
                   />
                 </FloatingLabel>
+                <FeedbackTooltip
+                  target={targetPassword.current}
+                  show={formik.errors.password && formik.touched.password}
+                  text={formik.errors.password}
+                />
               </Form.Group>
               <Form.Group className="mb-4">
                 <FloatingLabel
@@ -122,27 +132,17 @@ const Signup = ({ setFeedback }) => {
                     && formik.errors.passwordConfirm ? 'is-invalid' : ''}
                   />
                 </FloatingLabel>
+                <FeedbackTooltip
+                  target={targetPasswordConf.current}
+                  show={formik.errors.passwordConfirm && formik.touched.passwordConfirm}
+                  text={formik.errors.passwordConfirm}
+                />
               </Form.Group>
               {state === 'user_registered' && <div className="text-muted">{t('signUp.errors.user_registered')}</div>}
               <Button className="w-100" variant="outline-primary" type="submit">
                 {t('signUp.button')}
               </Button>
             </Form>
-            <FeedbackTooltip
-              target={targetUsername.current}
-              show={formik.errors.username && formik.touched.username}
-              text={formik.errors.username}
-            />
-            <FeedbackTooltip
-              target={targetPassword.current}
-              show={formik.errors.password && formik.touched.password}
-              text={formik.errors.password}
-            />
-            <FeedbackTooltip
-              target={targetPasswordConf.current}
-              show={formik.errors.passwordConfirm && formik.touched.passwordConfirm}
-              text={formik.errors.passwordConfirm}
-            />
           </div>
         </div>
       </div>
