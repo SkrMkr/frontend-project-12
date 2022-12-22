@@ -58,7 +58,9 @@ const ChannelItem = (props) => {
               split
               variant={channel.id === currentChannel.id && 'secondary'}
               id={`dropdown-split-basic-${channel.id}`}
-            />
+            >
+              <span className="visually-hidden">{t('channels.control')}</span>
+            </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item
                 href="#"

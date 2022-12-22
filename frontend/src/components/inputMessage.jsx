@@ -1,4 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, {
+  useState, useContext, useRef, useEffect,
+} from 'react';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -9,6 +11,7 @@ const InputMessage = () => {
   const [text, setText] = useState('');
   const chatContext = useContext(ChatContext);
   const { t } = useTranslation();
+  const ref = useRef();
   const { sendNewMessage, currentChannel } = chatContext;
 
   const sendMessage = () => {
@@ -20,6 +23,10 @@ const InputMessage = () => {
     sendNewMessage(message);
     setText('');
   };
+
+  useEffect(() => {
+    ref.current.focus();
+  });
 
   return (
     <Form
@@ -35,8 +42,9 @@ const InputMessage = () => {
           placeholder={t('placeholder.input_message')}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          area-label={t('placeholder.input_message')}
+          aria-label={t('placeholder.new_message')}
           className="border-0 p-0 ps-2"
+          ref={ref}
         />
         <Button variant="light" type="submit" disabled={text === ''}>
           <svg

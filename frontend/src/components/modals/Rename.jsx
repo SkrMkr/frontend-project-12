@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { useTranslation } from 'react-i18next';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { selectors } from '../../slices/channelsSlice';
 import getValidationSchema from '../../validate';
 import ChatContext from '../../contexts/chat';
@@ -46,6 +47,7 @@ const Rename = (props) => {
         <Modal.Body>
           <Form.Group>
             <Form.Control
+              id="name"
               required
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -60,6 +62,11 @@ const Rename = (props) => {
               {formik.errors.nameChannel}
             </Form.Text>
             )}
+            <FloatingLabel
+              controlId="name"
+              label={t('channels.name')}
+              className="visually-hidden"
+            />
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>

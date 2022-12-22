@@ -52,10 +52,10 @@ test.describe('auth', () => {
   });
 
   test('handle login error', async ({ page }) => {
+    console.log('Ник и пароль', await page.content());
     await page.locator('text=Ваш ник').type('guest');
     await page.locator('text=/^Пароль$/').type('pass');
     await page.locator('button[type="submit"]').click();
-
     expect(await page.$('text=Неверные имя пользователя или пароль')).not.toBeNull();
   });
 });
@@ -97,7 +97,6 @@ test.describe('chat', () => {
     await page.locator('text=+').click();
     await page.locator('text=Имя канала').type('test channel');
     await page.keyboard.press('Enter');
-
     expect(await page.locator('text=Канал создан')).toBeVisible();
     expect(await page.$('text=test channel')).not.toBeNull();
   });

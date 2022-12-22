@@ -12,7 +12,8 @@ export default {
     },
     channels: {
       title: 'Каналы',
-      control: 'Управление каналами',
+      name: 'Имя канала',
+      control: 'Управление каналом',
       remove: 'Удалить',
       rename: 'Переименовать',
       modal: {
@@ -28,16 +29,16 @@ export default {
       title: 'Войти',
       new_user: 'Нет аккаунта?',
       errors: {
-        authorization: 'Неверные имя пользователя или пароль.',
-        network_error: 'Ой, что-то пошло не так.',
+        authorization: 'Неверные имя пользователя или пароль',
+        network_error: 'Ой, что-то пошло не так',
       },
     },
     signUp: {
       title: 'Регистрация',
       button: 'Зарегистироваться',
       errors: {
-        user_registered: 'Такой пользователь уже существует.',
-        network_error: 'Ой, что-то пошло не так.',
+        user_registered: 'Такой пользователь уже существует',
+        network_error: 'Ой, что-то пошло не так',
       },
     },
     placeholder: {
@@ -46,6 +47,7 @@ export default {
       password: 'Пароль',
       passwordConfirm: 'Подтвердите пароль',
       input_message: 'Введите сообщение...',
+      new_message: 'Новое сообщение',
     },
     notFound: {
       title: 'Страница не найдена.',
@@ -56,7 +58,7 @@ export default {
       error: 'Ошибка',
       error_network: 'Ошибка соединения',
       channel_add: 'Канал создан',
-      channel_remove: 'Канал удален',
+      channel_remove: 'Канал удалён',
       channel_rename: 'Канал переименован',
     },
   },

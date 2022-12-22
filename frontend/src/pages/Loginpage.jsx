@@ -94,6 +94,7 @@ const Loginpage = ({ setFeedback }) => {
                         onBlur={handleBlur}
                         value={values.username}
                         ref={ref}
+                        className={formState === 'invalid' && 'is-invalid'}
                       />
                     </FloatingLabel>
                   </Form.Group>
@@ -112,6 +113,8 @@ const Loginpage = ({ setFeedback }) => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         value={values.password}
+                        ref={pasRef}
+                        className={formState === 'invalid' && 'is-invalid'}
                       />
                     </FloatingLabel>
                   </Form.Group>
@@ -120,7 +123,6 @@ const Loginpage = ({ setFeedback }) => {
                       target={pasRef.current}
                       show={formState === 'invalid'}
                       text={t('logIn.errors.authorization')}
-                      ref={pasRef}
                     />
                     <Button variant="outline-primary" type="submit">
                       Войти
