@@ -49,18 +49,18 @@ const PrivateAccess = ({ children }) => {
   return children;
 };
 
+const rollbarConfig = {
+  accessToken: 'f0b16381592541e6b64bd476533bcc6d',
+  environment: 'development',
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+};
+
+const rollbar = new Rollbar(rollbarConfig);
+
 const App = ({ socket }) => {
   const [feedback, setFeedback] = useState({ type: null, text: '' });
   const { t } = useTranslation();
-
-  const rollbarConfig = {
-    accessToken: 'f0b16381592541e6b64bd476533bcc6d',
-    environment: 'development',
-    captureUncaught: true,
-    captureUnhandledRejections: true,
-  };
-
-  const rollbar = new Rollbar(rollbarConfig);
 
   const notify = (type, text) => {
     if (type === 'success') {
@@ -77,7 +77,7 @@ const App = ({ socket }) => {
       setFeedback({ type: 'error', text: t('feedback.error_network') });
       rollbar.error(e);
     });
-  }, []);
+  }, [t, socket]);
 
   return (
     <Provider config={rollbarConfig}>
