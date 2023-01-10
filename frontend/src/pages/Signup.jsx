@@ -30,7 +30,6 @@ const Signup = () => {
       password,
     })
       .then((response) => {
-        console.log(response);
         logIn(response.data.token, response.data.username);
         goHome();
       })
