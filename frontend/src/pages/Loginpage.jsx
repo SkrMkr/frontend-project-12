@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import AuthContext from '../contexts';
 import routes from '../routes';
 import image from '../images/login.jpeg';
+import pathes from '../pathes';
 import FeedbackTooltip from '../components/feedbackTooltip';
 
 const schema = yup.object().shape({
@@ -22,8 +23,8 @@ const schema = yup.object().shape({
   password: yup.string().required('Обязательное поле'),
 });
 
-const Loginpage = ({ setFeedback }) => {
-  const [formState, setFormState] = useState('valid');
+const Loginpage = () => {
+  const [isAuthorization, setAuthorization] = useState(true);
   const navigate = useNavigate();
   const userAuth = useContext(AuthContext);
   const { t } = useTranslation();
@@ -42,10 +43,10 @@ const Loginpage = ({ setFeedback }) => {
       })
       .catch((e) => {
         if (e.response.status !== 401) {
-          setFeedback({ type: 'error', text: t('feedback.error_network') });
+          userAuth.notify('error', t('feedback.error_network'));
           return;
         }
-        setFormState('invalid');
+        setAuthorization(false);
       });
   };
 
@@ -72,6 +73,8 @@ const Loginpage = ({ setFeedback }) => {
             >
               {({
                 values,
+                isValid,
+                touched,
                 handleChange,
                 handleBlur,
                 handleSubmit,
@@ -94,7 +97,7 @@ const Loginpage = ({ setFeedback }) => {
                         onBlur={handleBlur}
                         value={values.username}
                         ref={ref}
-                        className={formState === 'invalid' && 'is-invalid'}
+                        className={touched.username && !isValid && 'is-invalid'}
                       />
                     </FloatingLabel>
                   </Form.Group>
@@ -114,14 +117,14 @@ const Loginpage = ({ setFeedback }) => {
                         onBlur={handleBlur}
                         value={values.password}
                         ref={pasRef}
-                        className={formState === 'invalid' && 'is-invalid'}
+                        className={touched.password && !isValid && 'is-invalid'}
                       />
                     </FloatingLabel>
                   </Form.Group>
                   <div className="d-grid gap-2">
                     <FeedbackTooltip
                       target={pasRef.current}
-                      show={formState === 'invalid'}
+                      show={!isAuthorization}
                       text={t('logIn.errors.authorization')}
                     />
                     <Button variant="outline-primary" type="submit">
@@ -136,7 +139,7 @@ const Loginpage = ({ setFeedback }) => {
             <div className="text-center">
               {t('logIn.new_user')}
               {' '}
-              <Link to="/signup">{t('signUp.title')}</Link>
+              <Link to={pathes.signup}>{t('signUp.title')}</Link>
             </div>
           </div>
         </div>

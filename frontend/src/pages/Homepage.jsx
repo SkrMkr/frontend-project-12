@@ -8,18 +8,20 @@ import { actions as channelsAction } from '../slices/channelsSlice';
 import { actions as messagesAction } from '../slices/messagesSlice';
 import routes from '../routes';
 import ChatContext from '../contexts/chat';
+import AuthContext from '../contexts/index';
 
 const Home = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation;
   const chatContext = useContext(ChatContext);
+  const authContext = useContext(AuthContext);
   const {
-    setFeedback,
     getNewChannel,
     getNewMessage,
     subscribeRemoveChannel,
     subscribeRenameChannel,
   } = chatContext;
+  const { notify } = authContext;
 
   useEffect(() => {
     const getResponse = async () => {
@@ -35,7 +37,7 @@ const Home = () => {
         dispatch(channelsAction.addChannels(channels));
         dispatch(messagesAction.addMessages(messages));
       } catch (e) {
-        setFeedback({ type: 'error', text: t('feedback.error_network') });
+        notify('error', t('feedback.error_network'));
       }
     };
 

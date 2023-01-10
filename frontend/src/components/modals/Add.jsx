@@ -8,13 +8,16 @@ import { useTranslation } from 'react-i18next';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { selectors } from '../../slices/channelsSlice';
 import ChatContext from '../../contexts/chat';
+import AuthContext from '../../contexts/index';
 import getValidationSchema from '../../validate';
 
 const Add = (props) => {
   const inputRef = useRef();
   const chatContext = useContext(ChatContext);
+  const authContext = useContext(AuthContext);
   const { t } = useTranslation();
   const { sendNewChannel } = chatContext;
+  const { notify } = authContext;
   const { onHide } = props;
 
   const channels = useSelector(selectors.selectAll);
@@ -31,8 +34,13 @@ const Add = (props) => {
     },
     validationSchema: schema,
     onSubmit: (values) => {
-      sendNewChannel(values.nameChannel);
-      onHide();
+      try {
+        sendNewChannel(values.nameChannel);
+        onHide();
+        notify('success', t('feedback.channel_add'));
+      } catch {
+        notify('error', t('feedback.error'));
+      }
     },
     validateOnChange: false,
     validateOnBlur: false,

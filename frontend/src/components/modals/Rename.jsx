@@ -9,12 +9,15 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { selectors } from '../../slices/channelsSlice';
 import getValidationSchema from '../../validate';
 import ChatContext from '../../contexts/chat';
+import AuthContext from '../../contexts/index';
 
 const Rename = (props) => {
   const { onHide, channel } = props;
   const chatContext = useContext(ChatContext);
+  const authContext = useContext(AuthContext);
   const { t } = useTranslation();
   const { renameChannel } = chatContext;
+  const { notify } = authContext;
   const inputRef = useRef();
 
   const channels = useSelector(selectors.selectAll);
@@ -27,8 +30,13 @@ const Rename = (props) => {
     },
     validationSchema: schema,
     onSubmit: (values) => {
-      renameChannel(channel.id, values.nameChannel);
-      onHide();
+      try {
+        renameChannel(channel.id, values.nameChannel);
+        onHide();
+        notify('success', t('feedback.channel_rename'));
+      } catch {
+        notify('error', t('feedback.error'));
+      }
     },
     validateOnChange: false,
     validateOnBlur: false,

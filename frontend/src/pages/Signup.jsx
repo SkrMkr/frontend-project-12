@@ -12,14 +12,14 @@ import AuthContext from '../contexts';
 import registration from '../images/registration.jpg';
 import FeedbackTooltip from '../components/feedbackTooltip';
 
-const Signup = ({ setFeedback }) => {
+const Signup = () => {
   const [state, setState] = useState('');
   const authContext = useContext(AuthContext);
   const { t } = useTranslation();
   const targetUsername = useRef();
   const targetPassword = useRef();
   const targetPasswordConf = useRef();
-  const { logIn } = authContext;
+  const { logIn, notify } = authContext;
 
   const navigate = useNavigate();
   const goHome = () => navigate('/');
@@ -36,7 +36,7 @@ const Signup = ({ setFeedback }) => {
       })
       .catch((e) => {
         if (e.response.status !== 409) {
-          setFeedback({ type: 'error', text: t('feedback.error_network') });
+          notify('error', t('feedback.error_network'));
           return;
         }
         setState('user_registered');
