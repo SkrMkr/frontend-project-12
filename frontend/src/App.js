@@ -3,6 +3,9 @@ import { Provider, ErrorBoundary } from '@rollbar/react';
 import Rollbar from 'rollbar';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import i18next from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import ru from './locales/ru';
 import Home from './pages/Homepage';
 import Notfound from './pages/Notfoundpage';
 import Loginpage from './pages/Loginpage';
@@ -35,7 +38,7 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     setLoggedIn(false);
-    window.location = '/login';
+    window.location = pathes.login;
   };
 
   return (
@@ -79,6 +82,15 @@ const rollbarConfig = {
 const rollbar = new Rollbar(rollbarConfig);
 
 const App = ({ socket }) => {
+  i18next
+    .use(initReactI18next)
+    .init({
+      lng: 'ru',
+      resources: {
+        ru,
+      },
+    });
+
   useEffect(() => {
     socket.on('connect_error', (e) => {
       rollbar.error(e);

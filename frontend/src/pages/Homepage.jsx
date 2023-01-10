@@ -21,7 +21,7 @@ const Home = () => {
     subscribeRemoveChannel,
     subscribeRenameChannel,
   } = chatContext;
-  const { notify } = authContext;
+  const { logOut, notify } = authContext;
 
   useEffect(() => {
     const getResponse = async () => {
@@ -36,7 +36,8 @@ const Home = () => {
 
         dispatch(channelsAction.addChannels(channels));
         dispatch(messagesAction.addMessages(messages));
-      } catch (e) {
+      } catch {
+        logOut();
         notify('error', t('feedback.error_network'));
       }
     };

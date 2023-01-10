@@ -24,7 +24,7 @@ const schema = yup.object().shape({
 });
 
 const Loginpage = () => {
-  const [isAuthorization, setAuthorization] = useState(true);
+  const [successAuthorization, setSuccessAuthorization] = useState(true);
   const navigate = useNavigate();
   const userAuth = useContext(AuthContext);
   const { t } = useTranslation();
@@ -46,7 +46,7 @@ const Loginpage = () => {
           userAuth.notify('error', t('feedback.error_network'));
           return;
         }
-        setAuthorization(false);
+        setSuccessAuthorization(false);
       });
   };
 
@@ -124,7 +124,7 @@ const Loginpage = () => {
                   <div className="d-grid gap-2">
                     <FeedbackTooltip
                       target={pasRef.current}
-                      show={!isAuthorization}
+                      show={!successAuthorization}
                       text={t('logIn.errors.authorization')}
                     />
                     <Button variant="outline-primary" type="submit">
