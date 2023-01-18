@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import LeoProfanity from 'leo-profanity';
 import { selectors } from '../slices/messagesSlice';
@@ -7,16 +7,20 @@ import ChatContext from '../contexts/chat';
 const OutputMessages = () => {
   const chatContext = useContext(ChatContext);
   const { currentChannel } = chatContext;
+  const lastMessageRef = useRef();
   const messages = useSelector(selectors.selectAll);
-  if (messages.length === 0) {
-    return null;
-  }
 
   const censorship = LeoProfanity;
   const ruWords = censorship.getDictionary('ru');
   censorship.add(ruWords);
 
   const filteredMessages = messages.filter((message) => message.channelId === currentChannel.id);
+
+  useEffect(() => {
+    lastMessageRef.current.scrollIntoView({
+      behavior: 'smooth',
+    });
+  }, [filteredMessages]);
 
   return (
     <>
@@ -28,6 +32,7 @@ const OutputMessages = () => {
           {censorship.clean(message.body)}
         </div>
       ))}
+      <span ref={lastMessageRef} />
     </>
   );
 };

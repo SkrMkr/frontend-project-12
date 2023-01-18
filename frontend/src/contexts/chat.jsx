@@ -27,6 +27,7 @@ const ChatProvider = ({ socket, children }) => {
 
   const subscribeRemoveChannel = () => socket.on('removeChannel', (payload) => {
     dispatch(channelAction.removeChannel(payload.id));
+    setCurrentChannel(channels[0]);
   });
 
   const removeChannel = (id) => socket.emit('removeChannel', { id }, () => {
